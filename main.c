@@ -4,7 +4,6 @@
 #include "update.h"
 
 tByte clock[6] = {0, 5, 9, 5, 3, 2};
-tByte cock[6] = {0, 0, 0, 0, 0, 0};
 
 void Timer2_ISR(void);
 
@@ -13,14 +12,7 @@ void main(void)
 	timer2_INIT();
 	while(1)
 	{
-		if (readPinP1(0) == 1)
-		{
-			display(cock);
-		}
-		else
-		{
 			display(clock);
-		}
 	}
 }
 /*======================================
