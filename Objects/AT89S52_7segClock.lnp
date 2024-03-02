@@ -1,0 +1,8 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\delay.obj",
+".\Objects\display.obj",
+".\Objects\update.obj",
+".\Objects\port.obj" 
+TO ".\Objects\AT89S52_7segClock" 
+PRINT(".\Listings\AT89S52_7segClock.m51") RAMSIZE(256) 

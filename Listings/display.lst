@@ -1,0 +1,47 @@
+C51 COMPILER V9.60.7.0   DISPLAY                                                           03/02/2024 02:25:30 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE DISPLAY
+OBJECT MODULE PLACED IN .\Objects\display.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE display.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\d
+                    -isplay.lst) TABS(2) OBJECT(.\Objects\display.obj)
+
+line level    source
+
+   1          #include "main.h"
+   2          #include "delay.h"
+   3          /*==============================================================
+   4          num[] array prints the digit corresponding to array index
+   5          to Port 2
+   6          
+   7          activePin[] gives the activation signal to Port 3
+   8          corresponding to the digit currently to be printed to display
+   9          ==============================================================*/
+  10          const tByte num[10] = {0xC0, 0XF9, 0XA4, 0XB0, 0X99, 0X92, 0X82, 0XF8, 0X80, 0X90};
+  11          
+  12          const tByte activePin[6] = {0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+  13          
+  14          void display(tByte clock[])
+  15          {
+  16   1        tByte i;
+  17   1          for(i = 0; i<6; i++)
+  18   1          {
+  19   2            P3 = activePin[i];
+  20   2            P2 = num[clock[i]];
+  21   2            delay_hardware();
+  22   2          }
+  23   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     51    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     16       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
