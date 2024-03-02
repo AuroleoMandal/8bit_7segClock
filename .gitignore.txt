@@ -1,4 +1,0 @@
-AT89S52_7segClock.uvgui.aurol
-AT89S52_7segClock.uvopt
-Listings/*
-Objects/*
