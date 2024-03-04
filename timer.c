@@ -1,10 +1,17 @@
 #include "main.h"
 void timer1_INIT(void)
 {
-	//Configure timer 0
+	#ifndef INTERRUPT_ENABLED //Enable global interrupts
+	#define INTERRUPT ENABLED //if not already enabled
+	EA = 1;
+	#endif
+	
+	//Configure timer 1
 	TMOD = TMOD & 0x0F;
 	TMOD = TMOD | 0x10;
+	
 	ET1 = 1;
+	PT1 = 1;
 	
 	TH1 = 0x3C;
 	TL1 = 0xB0;

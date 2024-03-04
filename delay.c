@@ -6,8 +6,8 @@ void delay_hardware(void)
 	TMOD = TMOD | 0x01;
 	ET0 = 0;
 	
-	TH0 = 0xD8;
-	TL0 = 0xF0;
+	TH0 = 0x3C;
+	TL0 = 0xB0;
 	
 	TF0 = 0;
 	TR0 = 1;

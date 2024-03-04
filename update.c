@@ -3,14 +3,19 @@
 
 void timer2_INIT(void)
 {
+	#ifndef INTERRUPT_ENABLED //Enable global interrupts
+	#define INTERRUPT ENABLED //if not already enabled
+	EA = 1;
+	#endif
+	
 	RCAP2H = 0x3C;
 	TH2    = 0x3C;
 	RCAP2L = 0xB0;
 	TL2    = 0xB0;
 	
-	TF2 = 0;
 	ET2 = 1;
-	EA = 1;
+
+	TF2 = 0;
 	TR2 = 1;
 }
 /*===============================================

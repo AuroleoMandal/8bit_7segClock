@@ -7,5 +7,4 @@ the function onto the LCD screen
 =================================================*/
 
 void display(tByte clock[]);
-
 #endif
