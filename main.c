@@ -9,66 +9,107 @@
 #define STATE_ALARM 2
 #define STATE_TIMER 3
 
-tByte clock[6] = {0, 5, 6, 5, 3, 2};
+#define BUTTON_L 0
+#define BUTTON_C 1
+#define BUTTON_R 2
 
-tByte set[6] = {1, 1, 1, 1, 1, 1};
-tByte alarm[6] = {2, 2, 2, 2, 2, 2};
+tByte clock[6] = {0, 0, 0, 0, 0, 0};
+
+tByte set[6] = {0, 0, 0, 0, 0, 0};
+tByte alarm[6] = {0, 0, 0, 0, 0, 0};
 tByte timer[6] = {0, 0, 0, 0, 0, 0};
 
+tByte zero[6] = {0, 0, 0, 0, 0, 0};
 tByte error[6] = {8, 8, 8, 8, 8, 8};
 
 tByte state = 0;
+tByte i = 0;
 
 void timer2_ISR(void);
 void timer1_ISR(void);
-tByte stateChange(tByte);
+void copy_time(tByte *time1, tByte *time2);
 
 void main(void)
 {
 	timer2_INIT();
 	while(1)
 	{
-		if(state == STATE_CLOCK)
-		{
-			if (debounce_readPinP1(0) == 1)
-				state = STATE_SET;
-			if (debounce_readPinP1(1) == 1)
-				state = STATE_ALARM;
-			if (debounce_readPinP1(2) == 1)
-				state = STATE_TIMER;
-		}
-		
-		
-
-
-
-		
 		switch(state)
 		{
+/*======================================================
+======================================================*/
 			case STATE_CLOCK:
 				display(clock);
+			
+				if(debounce_readPinP1(BUTTON_L))
+					state = STATE_SET;
+				if(debounce_readPinP1(BUTTON_C))
+					state = STATE_ALARM;
+				if(debounce_readPinP1(BUTTON_R))
+					state = STATE_TIMER;
 				break;
+
+/*======================================================
+======================================================*/
 			case STATE_SET:
 				display(set);
+			 if(i>=0 && i<6)
+				{
+					if(debounce_readPinP1(BUTTON_L))
+						i++;
+					if(debounce_readPinP1(BUTTON_C))
+						set[i]++;
+					if(debounce_readPinP1(BUTTON_R))
+						i--;
+				}
+				else
+				{
+					i = 0;
+					copy_time(clock, set);
+					copy_time(set, zero);
+					state = STATE_CLOCK;
+				}
 				break;
+/*======================================================
+======================================================*/
 			case STATE_ALARM:
 				display(alarm);
+				if(i>=0 && i<6)
+				{
+					if(debounce_readPinP1(BUTTON_L))
+						i++;
+					if(debounce_readPinP1(BUTTON_C))
+						alarm[i]++;
+					if(debounce_readPinP1(BUTTON_R))
+						i--;
+				}
+				else
+				{
+					i = 0;
+					state = STATE_CLOCK;
+				}
 				break;
+/*======================================================
+======================================================*/
 			case STATE_TIMER:
 				
-				if(debounce_readPinP1(1))
+				if(debounce_readPinP1(BUTTON_C))
 				{
-					if(TR1 == 1)
+					if(TR1)
 						timer1_STOP();
 					else 
 						timer1_INIT();
 				}
-				if(debounce_readPinP1(2))
+				if(debounce_readPinP1(BUTTON_R))
+				{
 					state = STATE_CLOCK;
-
+					copy_time(timer, zero);
+				}
 			
 				display(timer);
 				break;
+
+//-------------------------------------------
 			default:
 			display(error);
 		}
@@ -87,6 +128,8 @@ void timer2_ISR(void) interrupt INTERRUPT_T2
 	{
 		second_count = 0;
 		increment_second(clock);
+		if(clock == alarm)
+			writePinP1(7, 0);
 	}
 }
 
@@ -106,4 +149,10 @@ void timer1_ISR(void) interrupt INTERRUPT_T1
 		second_count1 = 0;
 		increment_second(timer);
 	}
+}
+
+void copy_time(tByte *time1, tByte *time2)
+{
+	for(i=0; i<6; i++)
+		time1[i] = time2[i];
 }
