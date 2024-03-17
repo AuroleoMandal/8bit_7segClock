@@ -31,6 +31,7 @@ void copy_time(tByte *time1, tByte *time2);
 
 void main(void)
 {
+	writePinP1(7, 0);
 	timer2_INIT();
 	while(1)
 	{
@@ -53,6 +54,7 @@ void main(void)
 ======================================================*/
 			case STATE_SET:
 				display(set);
+			
 			 if(i>=0 && i<6)
 				{
 					if(debounce_readPinP1(BUTTON_L))
@@ -79,7 +81,9 @@ void main(void)
 					if(debounce_readPinP1(BUTTON_L))
 						i++;
 					if(debounce_readPinP1(BUTTON_C))
+					{
 						alarm[i]++;
+					}
 					if(debounce_readPinP1(BUTTON_R))
 						i--;
 				}
@@ -129,7 +133,7 @@ void timer2_ISR(void) interrupt INTERRUPT_T2
 		second_count = 0;
 		increment_second(clock);
 		if(clock == alarm)
-			writePinP1(7, 0);
+			writePinP1(7, 1);
 	}
 }
 

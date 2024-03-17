@@ -35,7 +35,7 @@ bit debounce_readPinP1(const tByte PIN)
 	bit switchPressed = 0;
 	if(readPinP1(PIN) == 0 && switchStatus[PIN] == 0)
 	{
-		delay_hardware();
+		delay_hardware(10000);
 		if(readPinP1(PIN) == 0)
 		{
 			switchStatus[PIN] = 1;

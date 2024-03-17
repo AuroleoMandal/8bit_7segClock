@@ -18,6 +18,6 @@ void display(tByte clock[])
 		{
 			P3 = activePin[i];
 			P2 = num[clock[i]];
-			delay_hardware();
+			delay_hardware(30000);
 		}
 }
