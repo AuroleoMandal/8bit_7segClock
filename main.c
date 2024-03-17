@@ -27,7 +27,7 @@ tByte i = 0;
 
 void timer2_ISR(void);
 void timer1_ISR(void);
-void copy_time(tByte *time1, tByte *time2);
+void copy_time(tByte time1[], tByte time2[]);
 
 void main(void)
 {
@@ -155,7 +155,7 @@ void timer1_ISR(void) interrupt INTERRUPT_T1
 	}
 }
 
-void copy_time(tByte *time1, tByte *time2)
+void copy_time(tByte time1[], tByte time2[])
 {
 	for(i=0; i<6; i++)
 		time1[i] = time2[i];
