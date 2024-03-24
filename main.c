@@ -22,15 +22,18 @@ tByte timer[6] = {0, 0, 0, 0, 0, 0};
 tByte zero[6] = {0, 0, 0, 0, 0, 0};
 tByte error[6] = {8, 8, 8, 8, 8, 8};
 
-tByte state = 0;
+static tByte state = 0;
 tByte i = 0;
 
 void timer2_ISR(void);
 void timer1_ISR(void);
-void copy_time(tByte time1[], tByte time2[]);
+void copy_time(tByte[], tByte[]);
 
 void main(void)
 {
+	writePinP1(3, 0);
+	writePinP1(4, 0);
+	writePinP1(5, 0);
 	writePinP1(7, 0);
 	timer2_INIT();
 	while(1)
@@ -54,13 +57,14 @@ void main(void)
 ======================================================*/
 			case STATE_SET:
 				display(set);
+			writePinP1(3, 1);
 			
 			 if(i>=0 && i<6)
 				{
 					if(debounce_readPinP1(BUTTON_L))
 						i++;
 					if(debounce_readPinP1(BUTTON_C))
-						set[i]++;
+						clock_controlledIncrement(set, i);
 					if(debounce_readPinP1(BUTTON_R))
 						i--;
 				}
@@ -69,6 +73,7 @@ void main(void)
 					i = 0;
 					copy_time(clock, set);
 					copy_time(set, zero);
+					writePinP1(3, 0);
 					state = STATE_CLOCK;
 				}
 				break;
@@ -76,27 +81,30 @@ void main(void)
 ======================================================*/
 			case STATE_ALARM:
 				display(alarm);
+				writePinP1(4, 1);
+			
 				if(i>=0 && i<6)
 				{
 					if(debounce_readPinP1(BUTTON_L))
 						i++;
 					if(debounce_readPinP1(BUTTON_C))
-					{
-						alarm[i]++;
-					}
+						clock_controlledIncrement(alarm, i);
 					if(debounce_readPinP1(BUTTON_R))
 						i--;
 				}
 				else
 				{
 					i = 0;
+					writePinP1(4, 0);
 					state = STATE_CLOCK;
 				}
 				break;
 /*======================================================
 ======================================================*/
 			case STATE_TIMER:
-				
+				display(timer);
+				writePinP1(5, 1);
+			
 				if(debounce_readPinP1(BUTTON_C))
 				{
 					if(TR1)
@@ -106,11 +114,11 @@ void main(void)
 				}
 				if(debounce_readPinP1(BUTTON_R))
 				{
+					timer1_STOP();
+					writePinP1(5, 0);
 					state = STATE_CLOCK;
 					copy_time(timer, zero);
 				}
-			
-				display(timer);
 				break;
 
 //-------------------------------------------
@@ -160,3 +168,4 @@ void copy_time(tByte time1[], tByte time2[])
 	for(i=0; i<6; i++)
 		time1[i] = time2[i];
 }
+
